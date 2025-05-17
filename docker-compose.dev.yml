@@ -5,8 +5,7 @@ services:
     build:
       context: ./src/
       dockerfile: Dockerfile
-      args:
-      - NODE_ENV=development
+      target: development
     ports:
       - "4001:4000"
     # volumes:
