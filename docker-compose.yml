@@ -47,14 +47,18 @@ services:
     environment:
       - REDISINSIGHT_PORT=6379
       - REDISINSIGHT_HOST=redis
+  
+
   nginx:
     image: nginx:stable-alpine
     container_name: nginx_proxy
     restart: unless-stopped
     volumes:
       - ./nginx/default.conf:/etc/nginx/conf.d/default.conf
+      - ./ssl:/etc/nginx/ssl
     ports:
       - "8000:80"
+      - "8443:443"
     depends_on:
       - app
 
