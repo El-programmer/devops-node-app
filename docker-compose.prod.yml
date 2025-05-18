@@ -8,9 +8,15 @@ services:
       target: production
     ports:
       - "4000:4000"
-    volumes:
-      - ./src:/app
+    # volumes:
+    #   - ./src:/app
     environment:
       - APP_ENV=prodduction
       - APP_DEBUG=false
       - APP_URL=http://localhost:4000
+  mongo:
+    volumes:
+      - ./databases/prod/mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password

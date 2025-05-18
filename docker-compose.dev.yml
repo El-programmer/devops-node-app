@@ -14,3 +14,9 @@ services:
       - APP_ENV=development
       - APP_DEBUG=true
       - APP_URL=http://localhost:4001
+  mongo:
+    volumes:
+      - ./databases/dev/mongo_data:/data/db
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: password

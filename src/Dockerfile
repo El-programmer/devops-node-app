@@ -1,4 +1,4 @@
-FROM node:14 as development
+FROM node:18 AS development
 
 WORKDIR /app
 
@@ -13,7 +13,7 @@ EXPOSE 4001
 
 CMD ["npm", "run", "dev"]
 
-FROM node:14-slim as production
+FROM node:18-slim AS production
 
 WORKDIR /app
 

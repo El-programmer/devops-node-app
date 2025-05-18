@@ -1,33 +1,24 @@
-const express = require('express')
-const mysql = require('mysql2');
-const app = express()
-const port = 4000
-
-// DB Connection
-// const db = mysql.createConnection({
-//     host: 'mysql',
-//     user: 'user',
-//     password: 'password',
-//     database: 'mydb'
-// });
-
-// db.connect(err => {
-//     if (err) {
-//         console.error('Database connection failed:', err.stack);
-//         return;
-//     }
-//     console.log('Connected to MySQL database.');
-// });
+const express = require('express');
+const app = express();
+const PORT = process.env.PORT || 4000;
 
 // Routes
-app.get('/', (req, res) => {
-    // db.query('SELECT NOW() as time', (err, results) => {
-    //     if (err) return res.status(500).send('DB exxxxxxxxxrror');
-    //     res.send(`Hello from Dockerized Node.js App! Time: ${results[0].time}`);
-    // });
-    res.send('Hello World app!')
-});
+const redisRoute = require('./routes/redisRoute');
+const mongoRoute = require('./routes/mongoRoute');
+const mysqlRoute = require('./routes/mysqlRoute');
 
+app.get('/', async (req, res) => {
+  res.send(`
+    <h1>Home</h1>
+    <ul>
+      <li><a href="/home">Home</a></li>
+      <li><a href="/about">About</a></li>
+      <li><a href="/redis">Redis Test</a></li>
+      <li><a href="/mongo">MongoDB Test</a></li>
+      <li><a href="/mysql">MySQL Test</a></li>
+    </ul>
+  `);
+});
 
 
 app.get('/home', (req, res) => {
@@ -38,7 +29,10 @@ app.get('/home', (req, res) => {
 app.get('/about', (req, res) => {
     res.send('about!')
 })
+app.use('/redis', redisRoute);
+app.use('/mongo', mongoRoute);
+app.use('/mysql', mysqlRoute);
 
-app.listen(port, () => {
-    console.log(`Example app listening on port ${port}`)
-})
+app.listen(PORT, () => {
+  console.log(`🚀 Server running at http://localhost:${PORT}`);
+});

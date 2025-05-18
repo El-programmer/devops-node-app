@@ -2,14 +2,51 @@ version: '3'
 
 services:
   app:
-    # build: ./src
     container_name: my_app_container
     depends_on:
       - mysql
+      - mongo
     restart: unless-stopped
-    # volumes:
-    #   - ./src:/app
 
+  mongo:
+    image: mongo:latest
+    container_name: my_mongo_container
+    ports:
+      - "27017:27017"
+    restart: unless-stopped
+
+  mongo-express:
+    image: mongo-express
+    container_name: my_mongo_express_container
+    environment:
+      ME_CONFIG_MONGODB_SERVER: mongo
+      ME_CONFIG_MONGODB_ADMINUSERNAME: root
+      ME_CONFIG_MONGODB_ADMINPASSWORD: password
+      ME_CONFIG_MONGODB_URL: mongodb://root:password@mongo:27017
+      ME_CONFIG_BASICAUTH: false
+
+    ports:
+      - "8081:8081"
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    
+
+  redis:
+    image: redis:latest
+    container_name: my_redis_container
+    ports:
+      - "6379:6379"
+    restart: unless-stopped
+
+  redisinsight:
+    image: redis/redisinsight
+    container_name: my_redis_insight_container
+    ports:
+      - "5540:5540"
+    environment:
+      - REDISINSIGHT_PORT=6379
+      - REDISINSIGHT_HOST=redis
   # nginx:
   #   image: nginx:latest
   #   container_name: nginx_proxy
@@ -33,17 +70,17 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - ./mysql_data:/var/lib/mysql
+      - ./databases/dev/mysql_data:/var/lib/mysql
     restart: unless-stopped
 
-  # adminer:
-    # image: phpmyadmin
-    # container_name: my_phpmyadmin_container
-    # environment:
-    #   PMA_HOST: mysql
-    #   PMA_PORT: 3306
-    # ports:
-    #   - "8080:80"
-    # depends_on:
-    #   - mysql
-    # restart: unless-stopped
+  adminer:
+    image: phpmyadmin
+    container_name: my_phpmyadmin_container
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    restart: unless-stopped
