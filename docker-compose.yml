@@ -72,7 +72,6 @@ services:
     volumes:
       - ./databases/dev/mysql_data:/var/lib/mysql
     restart: unless-stopped
-
   adminer:
     image: phpmyadmin
     container_name: my_phpmyadmin_container
